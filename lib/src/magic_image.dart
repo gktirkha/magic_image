@@ -20,13 +20,16 @@ class MagicImage extends StatelessWidget {
     this.path, {
     super.key,
     this.fit,
-    this.srcColor,
     this.height,
     this.width,
     this.squareDimension,
     this.placeholderWidget,
     this.errorWidget,
     this.svgPlaceHolder,
+    this.repeat = ImageRepeat.noRepeat,
+    this.color,
+    this.blendMode,
+    this.colorFilter,
   });
 
   /// The path of the image to display.
@@ -36,11 +39,6 @@ class MagicImage extends StatelessWidget {
 
   /// How to inscribe the image into the space allocated during layout.
   final BoxFit? fit;
-
-  /// The color to use when drawing the SVG.
-  ///
-  /// It is applied as a color filter.
-  final Color? srcColor;
 
   /// The height of the image.
   final double? height;
@@ -59,6 +57,26 @@ class MagicImage extends StatelessWidget {
 
   /// A widget to display as a placeholder while loading an SVG image.
   final Widget? svgPlaceHolder;
+
+  /// How to paint any portions of the image that are not covered by the source image.
+  ///
+  /// Will not be applied if image is svg
+  final ImageRepeat repeat;
+
+  /// The color to blend with the image.
+  ///
+  /// if image is svg, and color filter is passed, it will be used instead
+  final Color? color;
+
+  /// The blend mode to apply when blending the image with the color.
+  ///
+  /// if image is svg, and color filter is passed, it will be used instead
+  final BlendMode? blendMode;
+
+  /// A color filter to apply to the image.
+  ///
+  /// will be applied only if image is svg
+  final ColorFilter? colorFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +103,14 @@ class MagicImage extends StatelessWidget {
                             ),
                           ),
                       fit: fit ?? BoxFit.contain,
-                      colorFilter: srcColor == null
-                          ? null
-                          : ColorFilter.mode(srcColor!, BlendMode.srcATop),
+                      colorFilter: colorFilter != null
+                          ? colorFilter
+                          : (color == null || blendMode == null)
+                              ? null
+                              : ColorFilter.mode(color!, blendMode!),
                     )
                   : CachedNetworkImage(
+                      repeat: repeat,
                       width: squareDimension ?? width,
                       height: squareDimension ?? height,
                       imageUrl: path,
@@ -105,6 +126,8 @@ class MagicImage extends StatelessWidget {
                           (BuildContext context, String url, Object error) =>
                               errorWidget ?? const SizedBox.shrink(),
                       fit: fit,
+                      color: color,
+                      colorBlendMode: blendMode,
                     )
               : path.endsWith('.svg')
                   ? SvgPicture.asset(
@@ -112,15 +135,20 @@ class MagicImage extends StatelessWidget {
                       height: squareDimension ?? height,
                       path,
                       fit: fit ?? BoxFit.contain,
-                      colorFilter: srcColor == null
-                          ? null
-                          : ColorFilter.mode(srcColor!, BlendMode.srcATop),
+                      colorFilter: colorFilter != null
+                          ? colorFilter
+                          : (color == null || blendMode == null)
+                              ? null
+                              : ColorFilter.mode(color!, blendMode!),
                     )
                   : Image.asset(
                       path,
                       fit: fit,
                       width: squareDimension ?? width,
                       height: squareDimension ?? height,
+                      repeat: repeat,
+                      color: color,
+                      colorBlendMode: blendMode,
                     ),
         );
       },
