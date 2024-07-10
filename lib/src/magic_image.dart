@@ -15,7 +15,7 @@ class MagicImage extends StatelessWidget {
   /// The [path] parameter must not be null.
   /// The [fit], [height], [width], [squareDimension], [placeholderWidget],
   /// [errorWidget], [svgPlaceHolder], [repeat], [color], [blendMode],
-  /// [colorFilter], [boxDecoration], and [loadingIndicatorSize] parameters are optional.
+  /// [colorFilter], [boxDecoration], and [defaultPlaceHolderSize] parameters are optional.
   const MagicImage(
     this.path, {
     super.key,
@@ -31,7 +31,7 @@ class MagicImage extends StatelessWidget {
     this.blendMode,
     this.colorFilter,
     this.boxDecoration,
-    this.loadingIndicatorSize,
+    this.defaultPlaceHolderSize,
   });
 
   /// The path of the image to display.
@@ -83,8 +83,10 @@ class MagicImage extends StatelessWidget {
   /// A decoration to apply to the container holding the image.
   final BoxDecoration? boxDecoration;
 
-  /// The size of the loading indicator.
-  final double? loadingIndicatorSize;
+  /// The size of the default loading indicator.
+  ///
+  /// If Using Custom placeholder it will have no effect
+  final double? defaultPlaceHolderSize;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,7 @@ class MagicImage extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double minSize = min(constraints.maxHeight, constraints.maxWidth);
         final double loaderSize =
-            loadingIndicatorSize ?? (minSize > 40 ? 40 : minSize / 2);
+            defaultPlaceHolderSize ?? (minSize > 40 ? 40 : minSize / 2);
         return Container(
           decoration: boxDecoration,
           width: squareDimension ?? width,
