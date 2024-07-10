@@ -1,20 +1,23 @@
 # MagicImage Widget
 
-The `MagicImage` widget is a versatile Flutter widget that displays an image from a given path, supporting both network and asset images, including SVG format. It provides various customization options such as fit, color, dimensions, and placeholder/error widgets.
+`MagicImage` is a Flutter widget that displays an image from a given path, with support for both network and asset images, including SVG format. It provides various customization options such as fit, color, dimensions, and placeholder/error widgets.
 
 ## Features
 
-- Load images from a URL or local assets.
-- Support for both raster and SVG images.
-- Customizable dimensions, fit, and color.
-- Placeholder and error widgets for better user experience.
+- Display images from both network URLs and local asset paths.
+- Support for SVG images.
+- Customizable fit, color, dimensions, and more.
+- Placeholder and error widgets for loading and error states.
+- Optional box decoration for the container holding the image.
+- Customizable loading indicator size.
 
 ## Installation
 
-Add the following dependencies to your `pubspec.yaml` file:
+To use `MagicImage` in your Flutter project, add the necessary dependencies to your `pubspec.yaml` file:
 
 ```yaml
-magic_image:
+dependencies:
+  magic_image:
     git: https://github.com/gktirkha/magic_image
 ```
 
@@ -23,28 +26,7 @@ magic_image:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:your_package/magic_image.dart';
-
-class MyWidget extends StatelessWidget {
-@override
-Widget build(BuildContext context) {
-    return Scaffold(
-    appBar: AppBar(
-        title: Text('MagicImage Example'),
-    ),
-    body: Center(
-        child: MagicImage('assets/images/sample.png'),
-    ),
-    );
-}
-}
-```
-
-## Network Image with Placeholder and Error Widget
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:your_package/magic_image.dart';
+import 'package:magic_image/magic_image.dart'; 
 
 class MyWidget extends StatelessWidget {
   @override
@@ -54,11 +36,29 @@ class MyWidget extends StatelessWidget {
         title: Text('MagicImage Example'),
       ),
       body: Center(
-        child: MagicImage(
-          'https://example.com/sample.png',
-          placeholderWidget: CircularProgressIndicator(),
-          errorWidget: Icon(Icons.error),
-        ),
+        child: MagicImage('assets/images/sample.png'),
+      ),
+    );
+  }
+}
+
+```
+
+## Network Image with Placeholder and Error Widget
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:magic_image/magic_image.dart';
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('MagicImage Example'),
+      ),
+      body: Center(
+        child: MagicImage('assets/images/sample.png'),
       ),
     );
   }
@@ -70,7 +70,7 @@ class MyWidget extends StatelessWidget {
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:your_package/magic_image.dart';
+import 'package:magic_image/magic_image.dart';
 
 class MyWidget extends StatelessWidget {
   @override
@@ -82,26 +82,35 @@ class MyWidget extends StatelessWidget {
       body: Center(
         child: MagicImage(
           'assets/images/sample.svg',
-          srcColor: Colors.red,
+          color: Colors.red,
           fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
+
 ```
 
 ## Parameters
 
-- **path**: The path of the image to display. It can be a URL for network images or a local asset path.
-- **fit**: How to inscribe the image into the space allocated during layout. Default is `BoxFit.contain`.
-- **srcColor**: The color to use when drawing the SVG. It is applied as a color filter.
-- **height**: The height of the image.
-- **width**: The width of the image.
-- **squareDimension**: If specified, the image will be rendered with this square dimension.
-- **placeholderWidget**: A widget to display while the image is loading.
-- **errorWidget**: A widget to display if an error occurs while loading the image.
-- **svgPlaceHolder**: A widget to display as a placeholder while loading an SVG image.
+| Parameter             | Type            | Description                                                                 |
+|-----------------------|-----------------|-----------------------------------------------------------------------------|
+| `path`                | `String`        | The path of the image to display (URL or local asset path).                  |
+| `fit`                 | `BoxFit?`       | How to inscribe the image into the space allocated during layout.            |
+| `height`              | `double?`       | The height of the image.                                                    |
+| `width`               | `double?`       | The width of the image.                                                     |
+| `squareDimension`     | `double?`       | If specified, the image will be rendered with this square dimension.         |
+| `placeholderWidget`   | `Widget?`       | A widget to display while the image is loading.                              |
+| `errorWidget`         | `Widget?`       | A widget to display if an error occurs while loading the image.              |
+| `svgPlaceHolder`      | `Widget?`       | A widget to display as a placeholder while loading an SVG image.             |
+| `repeat`              | `ImageRepeat`   | How to paint any portions of the image that are not covered by the source image. |
+| `color`               | `Color?`        | The color to blend with the image.                                           |
+| `blendMode`           | `BlendMode?`    | The blend mode to apply when blending the image with the color.              |
+| `colorFilter`         | `ColorFilter?`  | A color filter to apply to the image.                                        |
+| `boxDecoration`       | `BoxDecoration?`| A decoration to apply to the container holding the image.                    |
+| `loadingIndicatorSize`| `double?`       | The size of the loading indicator.                                           |
+
 
 ## Contributing
 

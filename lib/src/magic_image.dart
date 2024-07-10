@@ -13,9 +13,9 @@ class MagicImage extends StatelessWidget {
   /// Creates a [MagicImage] widget.
   ///
   /// The [path] parameter must not be null.
-  /// The [fit], [srcColor], [height], [width], [loaderColor],
-  /// [squareDimension], [placeholderWidget], [errorWidget], and
-  /// [svgPlaceHolder] parameters are optional.
+  /// The [fit], [height], [width], [squareDimension], [placeholderWidget],
+  /// [errorWidget], [svgPlaceHolder], [repeat], [color], [blendMode],
+  /// [colorFilter], [boxDecoration], and [loadingIndicatorSize] parameters are optional.
   const MagicImage(
     this.path, {
     super.key,
@@ -30,6 +30,8 @@ class MagicImage extends StatelessWidget {
     this.color,
     this.blendMode,
     this.colorFilter,
+    this.boxDecoration,
+    this.loadingIndicatorSize,
   });
 
   /// The path of the image to display.
@@ -60,31 +62,39 @@ class MagicImage extends StatelessWidget {
 
   /// How to paint any portions of the image that are not covered by the source image.
   ///
-  /// Will not be applied if image is svg
+  /// Will not be applied if the image is an SVG.
   final ImageRepeat repeat;
 
   /// The color to blend with the image.
   ///
-  /// if image is svg, and color filter is passed, it will be used instead
+  /// If the image is an SVG, and a color filter is passed, it will be used instead.
   final Color? color;
 
   /// The blend mode to apply when blending the image with the color.
   ///
-  /// if image is svg, and color filter is passed, it will be used instead
+  /// If the image is an SVG, and a color filter is passed, it will be used instead.
   final BlendMode? blendMode;
 
   /// A color filter to apply to the image.
   ///
-  /// will be applied only if image is svg
+  /// This will be applied only if the image is an SVG.
   final ColorFilter? colorFilter;
+
+  /// A decoration to apply to the container holding the image.
+  final BoxDecoration? boxDecoration;
+
+  /// The size of the loading indicator.
+  final double? loadingIndicatorSize;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double minSize = min(constraints.maxHeight, constraints.maxWidth);
-        final double loaderSize = minSize > 40 ? 40 : minSize / 2;
-        return SizedBox(
+        final double loaderSize =
+            loadingIndicatorSize ?? (minSize > 40 ? 40 : minSize / 2);
+        return Container(
+          decoration: boxDecoration,
           width: squareDimension ?? width,
           height: squareDimension ?? height,
           child: path.isURL
