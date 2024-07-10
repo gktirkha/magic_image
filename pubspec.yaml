@@ -1,6 +1,8 @@
 name: magic_image
 description: "A new Flutter package project."
 version: 0.0.1
+homepage: https://github.com/gktirkha/magic_image
+repository: https://github.com/gktirkha/magic_image
 
 
 environment:

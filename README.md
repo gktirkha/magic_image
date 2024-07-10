@@ -1,6 +1,6 @@
-# MagicImage Widget
+# MagicImage
 
-`MagicImage` is a Flutter widget that displays an image from a given path, with support for both network and asset images, including SVG format. It provides various customization options such as fit, color, dimensions, and placeholder/error widgets.
+`MagicImage` is a Flutter Package that displays an image from a given path, with support for both network and asset images, including SVG format. It provides various customization options such as fit, color, dimensions, and placeholder/error widgets.
 
 ## Features
 
@@ -10,6 +10,8 @@
 - Placeholder and error widgets for loading and error states.
 - Optional box decoration for the container holding the image.
 - Customizable loading indicator size.
+
+> If you prefer, You may find the dart-doc version of the documentation [here](https://gktirkha.github.io/flutter_packages_doc/magic_image/)
 
 ## Installation
 
@@ -110,11 +112,12 @@ class MyWidget extends StatelessWidget {
 | `colorFilter`           | `ColorFilter?`  | A color filter to apply to the image.                                            |
 | `boxDecoration`         | `BoxDecoration?`| A decoration to apply to the container holding the image.                        |
 | `defaultPlaceHolderSize`| `double?`       | The size of the default loading indicator.                                       |
+| `clipBehavior`          | `Clip?`         | Clip Behavior For image                                                          |
 
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request on GitHub.
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub.](https://github.com/gktirkha/magic_image)
 
 ## License
 

@@ -15,7 +15,7 @@ class MagicImage extends StatelessWidget {
   /// The [path] parameter must not be null.
   /// The [fit], [height], [width], [squareDimension], [placeholderWidget],
   /// [errorWidget], [svgPlaceHolder], [repeat], [color], [blendMode],
-  /// [colorFilter], [boxDecoration], and [defaultPlaceHolderSize] parameters are optional.
+  /// [colorFilter], [boxDecoration], [clipBehavior] and [defaultPlaceHolderSize] parameters are optional.
   const MagicImage(
     this.path, {
     super.key,
@@ -32,6 +32,7 @@ class MagicImage extends StatelessWidget {
     this.colorFilter,
     this.boxDecoration,
     this.defaultPlaceHolderSize,
+    this.clipBehavior = Clip.none,
   });
 
   /// The path of the image to display.
@@ -88,6 +89,9 @@ class MagicImage extends StatelessWidget {
   /// If Using Custom placeholder it will have no effect
   final double? defaultPlaceHolderSize;
 
+  /// Clip Behavior For image, default [Clip.none]
+  final Clip clipBehavior;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -96,6 +100,7 @@ class MagicImage extends StatelessWidget {
         final double loaderSize =
             defaultPlaceHolderSize ?? (minSize > 40 ? 40 : minSize / 2);
         return Container(
+          clipBehavior: clipBehavior,
           decoration: boxDecoration,
           width: squareDimension ?? width,
           height: squareDimension ?? height,
