@@ -166,6 +166,8 @@ class MagicImage extends StatelessWidget {
                       repeat: repeat,
                       color: color,
                       colorBlendMode: blendMode,
+                      errorBuilder: (context, error, stackTrace) =>
+                          errorWidget ?? const SizedBox.shrink(),
                     ),
         );
       },
