@@ -33,6 +33,7 @@ class MagicImage extends StatelessWidget {
     this.boxDecoration,
     this.defaultPlaceHolderSize,
     this.clipBehavior = Clip.none,
+    this.headers,
   });
 
   /// The path of the image to display.
@@ -92,6 +93,9 @@ class MagicImage extends StatelessWidget {
   /// Clip Behavior For image, default [Clip.none]
   final Clip clipBehavior;
 
+  /// headers for network images/svg
+  final Map<String, String>? headers;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -107,6 +111,7 @@ class MagicImage extends StatelessWidget {
           child: path.isURL
               ? path.endsWith('.svg')
                   ? SvgPicture.network(
+                      headers: headers,
                       width: squareDimension ?? width,
                       height: squareDimension ?? height,
                       path,
@@ -127,6 +132,7 @@ class MagicImage extends StatelessWidget {
                               : ColorFilter.mode(color!, blendMode!),
                     )
                   : CachedNetworkImage(
+                      httpHeaders: headers,
                       repeat: repeat,
                       width: squareDimension ?? width,
                       height: squareDimension ?? height,
