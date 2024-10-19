@@ -1,5 +1,6 @@
 extension StringExtension on String {
   bool get isURL => StringUtil.isURL(this);
+  bool get isSVG => endsWith('.svg');
 }
 
 class StringUtil {
