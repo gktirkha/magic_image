@@ -470,8 +470,10 @@ class MagicImage extends StatelessWidget {
                               ),
                             ),
                         errorWidget:
-                            (BuildContext context, String url, Object error) =>
-                                errorWidget ?? const SizedBox.shrink(),
+                            (BuildContext context, String url, Object error) {
+                          onError?.call(error, null);
+                          return errorWidget ?? const SizedBox.shrink();
+                        },
                         fit: fit,
                         color: color,
                         colorBlendMode: blendMode,
@@ -496,8 +498,10 @@ class MagicImage extends StatelessWidget {
                         repeat: repeat,
                         color: color,
                         colorBlendMode: blendMode,
-                        errorBuilder: (context, error, stackTrace) =>
-                            errorWidget ?? const SizedBox.shrink(),
+                        errorBuilder: (context, error, stackTrace) {
+                          onError?.call(error, stackTrace);
+                          return errorWidget ?? const SizedBox.shrink();
+                        },
                       ),
           );
         },
