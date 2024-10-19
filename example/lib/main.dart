@@ -12,8 +12,23 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body:
-            Center(child: ("https://placehold.jp/150x150.png".toMagicImage())),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              "https://photographylife.com/wp-content/uploads/2023/05/Nikon-Z8-Official-Samples-00001.jpg"
+                  .toMagicImage(
+                squareDimension: 200,
+                fit: BoxFit.fill,
+              ),
+              const MagicImage(
+                "https://photographylife.com/wp-content/uploads/2023/05/Nikon-Z8-Official-Samples-00001.jpg",
+                squareDimension: 200,
+                fit: BoxFit.fill,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
