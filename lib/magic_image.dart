@@ -4,4 +4,4 @@
 library magic_image;
 
 export './src/magic_image.dart';
-export './src/string_extension.dart';
+export './src/magic_image_extension.dart';

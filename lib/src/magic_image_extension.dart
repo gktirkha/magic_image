@@ -6,8 +6,7 @@ import 'package:magic_image/magic_image.dart';
 ///
 /// A [ MagicImage ] widget configured with the provided parameters.
 extension MagicImageExtension on String {
-  Widget toMagicImage(
-    String path, {
+  Widget toMagicImage({
     BoxFit? fit,
     double? height,
     double? width,
@@ -89,7 +88,7 @@ extension MagicImageExtension on String {
     GestureTapUpCallback? onTapUp,
   }) {
     return MagicImage(
-      path,
+      this,
       onTap: onTap,
       onDoubleTap: onDoubleTap,
       onDoubleTapCancel: onDoubleTapCancel,
