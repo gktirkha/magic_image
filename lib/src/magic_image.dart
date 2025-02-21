@@ -438,7 +438,7 @@ class MagicImage extends StatelessWidget {
                         headers: headers,
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
-                        path,
+                        Uri.parse(path).toString(),
                         placeholderBuilder: (BuildContext context) =>
                             svgPlaceHolder ??
                             placeholderWidget ??
@@ -460,7 +460,7 @@ class MagicImage extends StatelessWidget {
                         repeat: repeat,
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
-                        imageUrl: path,
+                        imageUrl: Uri.parse(path).toString(),
                         placeholder: (BuildContext context, String url) =>
                             placeholderWidget ??
                             Center(
