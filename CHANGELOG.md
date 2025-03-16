@@ -9,3 +9,7 @@
 ## 0.0.3
 
 * added placeHolderBuilder and errorWidgetBuilder
+
+## 0.0.4
+
+* added key in extension
