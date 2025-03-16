@@ -50,14 +50,18 @@ class MagicCachedImage extends StatelessWidget {
         width: squareDimension ?? width,
         height: squareDimension ?? height,
         imageUrl: Uri.parse(path).toString(),
-        placeholder: (BuildContext context, String url) =>
-            placeholderWidget ??
-            Center(
-              child: SizedBox.square(
-                dimension: loaderSize,
-                child: const CircularProgressIndicator(),
-              ),
-            ),
+        placeholder: (BuildContext context, String url) {
+          if (placeHolderBuilder != null) {
+            return placeHolderBuilder!.call(context);
+          }
+          return placeholderWidget ??
+              Center(
+                child: SizedBox.square(
+                  dimension: loaderSize,
+                  child: const CircularProgressIndicator(),
+                ),
+              );
+        },
         errorWidget: (BuildContext context, String url, Object error) {
           if (errorWidgetBuilder != null) {
             return errorWidgetBuilder!.call(context, error, null);

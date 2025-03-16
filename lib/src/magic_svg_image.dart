@@ -45,26 +45,24 @@ class MagicSvgImage extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       width: squareDimension ?? width,
       height: squareDimension ?? height,
-      placeholderBuilder: (context) =>
-          placeholderWidget ??
-          Center(
-            child: SizedBox.square(
-              dimension: loaderSize,
-              child: const CircularProgressIndicator(),
-            ),
-          ),
+      placeholderBuilder: placeHolderBuilder ??
+          (context) =>
+              placeholderWidget ??
+              Center(
+                child: SizedBox.square(
+                  dimension: loaderSize,
+                  child: const CircularProgressIndicator(),
+                ),
+              ),
       fit: fit ?? BoxFit.contain,
       colorFilter: colorFilter ??
           ((color == null || blendMode == null)
               ? null
               : ColorFilter.mode(color!, blendMode!)),
-      errorBuilder: (context, error, stackTrace) {
-        if (errorWidgetBuilder != null) {
-          return errorWidgetBuilder!.call(context, error, stackTrace);
-        } else {
-          return errorWidget ?? const SizedBox.shrink();
-        }
-      },
+      errorBuilder: errorWidgetBuilder ??
+          (context, error, stackTrace) {
+            return errorWidget ?? const SizedBox.shrink();
+          },
     );
   }
 }
