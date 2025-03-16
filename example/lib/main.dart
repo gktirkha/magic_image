@@ -10,26 +10,96 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              "https://photographylife.com/wp-content/uploads/2023/05/Nikon-Z8-Official-Samples-00001.jpg"
-                  .toMagicImage(
-                squareDimension: 200,
-                fit: BoxFit.fill,
+    return MaterialApp(home: Home(), debugShowCheckedModeBanner: false);
+  }
+}
+
+class Home extends StatelessWidget {
+  Home({super.key});
+  final TextEditingController textEditingController = TextEditingController(
+    text: "https://static.remove.bg/sample-gallery/graphics/bird-thumbnail.jpg",
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Enter Any File / Url / asset path",
+                ),
+                controller: textEditingController,
+                onSubmitted: (value) {
+                  showImage(context);
+                },
               ),
-              MagicImage(
-                "https://photographylife.com/wp-content/uploads/2023/05/Nikon-Z8-Official-Samples-00001.jpg",
-                squareDimension: 200,
-                fit: BoxFit.fill,
-              )
-            ],
-          ),
+            ),
+            SizedBox(width: 24),
+            ElevatedButton(
+              onPressed: () {
+                showImage(context);
+              },
+              child: Text("Show Image"),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  showImage(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "Image Dialog",
+      barrierDismissible: true,
+      context: context,
+      pageBuilder:
+          (context, animation, secondaryAnimation) => Center(
+            child: Material(
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: MagicImage(
+                        clipBehavior: Clip.antiAlias,
+                        boxDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        fit: BoxFit.fill,
+                        textEditingController.text,
+                        squareDimension: 300,
+                        errorWidget: Center(child: Text("Error Occurred")),
+                        placeholderWidget: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.red,
+                          child: Icon(Icons.close, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
     );
   }
 }
