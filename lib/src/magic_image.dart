@@ -99,6 +99,9 @@ class MagicImage extends StatelessWidget {
     this.supportedDevices,
     this.trackpadScrollCausesScale = false,
     this.trackpadScrollToScaleFactor = kDefaultTrackpadScrollToScaleFactor,
+    this.forceSvg = false,
+    this.semanticsLabel,
+    this.alignment,
   });
 
   /// The path of the image to display.
@@ -355,6 +358,15 @@ class MagicImage extends StatelessWidget {
   /// This is invoked when the pointer is lifted after a successful tap gesture.
   final GestureTapUpCallback? onTapUp;
 
+  /// To force use svg render
+  final bool forceSvg;
+
+  /// semanticsLabel for screen readers
+  final String? semanticsLabel;
+
+  /// AlignmentGeometry to set Alignment
+  final Alignment? alignment;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -433,8 +445,10 @@ class MagicImage extends StatelessWidget {
             width: squareDimension ?? width,
             height: squareDimension ?? height,
             child: path.isURL
-                ? path.isSVG
+                ? (path.isSVG || forceSvg)
                     ? SvgPicture(
+                        alignment: alignment ?? Alignment.center,
+                        semanticsLabel: semanticsLabel,
                         SvgNetworkLoader(Uri.parse(path).toString(),
                             headers: headers),
                         width: squareDimension ?? width,
@@ -456,13 +470,47 @@ class MagicImage extends StatelessWidget {
                         errorBuilder: (context, error, stackTrace) =>
                             errorWidget ?? SizedBox.shrink(),
                       )
-                    : CachedNetworkImage(
-                        httpHeaders: headers,
-                        repeat: repeat,
+                    : Semantics(
+                        label: semanticsLabel,
+                        child: CachedNetworkImage(
+                          alignment: alignment ?? Alignment.center,
+                          httpHeaders: headers,
+                          repeat: repeat,
+                          width: squareDimension ?? width,
+                          height: squareDimension ?? height,
+                          imageUrl: Uri.parse(path).toString(),
+                          placeholder: (BuildContext context, String url) =>
+                              placeholderWidget ??
+                              Center(
+                                child: SizedBox.square(
+                                  dimension: loaderSize,
+                                  child: const CircularProgressIndicator(),
+                                ),
+                              ),
+                          errorWidget:
+                              (BuildContext context, String url, Object error) {
+                            onError?.call(error, null);
+                            return errorWidget ?? const SizedBox.shrink();
+                          },
+                          fit: fit,
+                          color: color,
+                          colorBlendMode: blendMode,
+                        ),
+                      )
+                : (path.isSVG || forceSvg)
+                    ? SvgPicture(
+                        SvgAssetLoader(path),
+                        alignment: alignment ?? Alignment.center,
+                        semanticsLabel: semanticsLabel,
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
-                        imageUrl: Uri.parse(path).toString(),
-                        placeholder: (BuildContext context, String url) =>
+                        fit: fit ?? BoxFit.contain,
+                        colorFilter: colorFilter != null
+                            ? colorFilter
+                            : (color == null || blendMode == null)
+                                ? null
+                                : ColorFilter.mode(color!, blendMode!),
+                        placeholderBuilder: (context) =>
                             placeholderWidget ??
                             Center(
                               child: SizedBox.square(
@@ -470,29 +518,13 @@ class MagicImage extends StatelessWidget {
                                 child: const CircularProgressIndicator(),
                               ),
                             ),
-                        errorWidget:
-                            (BuildContext context, String url, Object error) {
-                          onError?.call(error, null);
-                          return errorWidget ?? const SizedBox.shrink();
-                        },
-                        fit: fit,
-                        color: color,
-                        colorBlendMode: blendMode,
+                        errorBuilder: (context, error, stackTrace) =>
+                            errorWidget ?? SizedBox.shrink(),
                       )
-                : path.isSVG
-                    ? SvgPicture.asset(
-                        width: squareDimension ?? width,
-                        height: squareDimension ?? height,
-                        path,
-                        fit: fit ?? BoxFit.contain,
-                        colorFilter: colorFilter != null
-                            ? colorFilter
-                            : (color == null || blendMode == null)
-                                ? null
-                                : ColorFilter.mode(color!, blendMode!),
-                      )
-                    : Image.asset(
-                        path,
+                    : Image(
+                        alignment: alignment ?? Alignment.center,
+                        semanticLabel: semanticsLabel,
+                        image: AssetImage(path),
                         fit: fit,
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
