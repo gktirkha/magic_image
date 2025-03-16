@@ -92,6 +92,7 @@ extension MagicImageExtension on String {
     bool forceSvg = false,
     ImageErrorWidgetBuilder? errorWidgetBuilder,
     Widget Function(BuildContext context)? placeHolderBuilder,
+    Key? key,
   }) {
     return MagicImage(
       this,
@@ -179,6 +180,7 @@ extension MagicImageExtension on String {
       alignment: alignment,
       errorWidgetBuilder: errorWidgetBuilder,
       placeHolderBuilder: placeHolderBuilder,
+      key: key,
     );
   }
 }
