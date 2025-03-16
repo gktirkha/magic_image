@@ -434,13 +434,12 @@ class MagicImage extends StatelessWidget {
             height: squareDimension ?? height,
             child: path.isURL
                 ? path.isSVG
-                    ? SvgPicture.network(
-                        headers: headers,
+                    ? SvgPicture(
+                        SvgNetworkLoader(Uri.parse(path).toString(),
+                            headers: headers),
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
-                        Uri.parse(path).toString(),
-                        placeholderBuilder: (BuildContext context) =>
-                            svgPlaceHolder ??
+                        placeholderBuilder: (context) =>
                             placeholderWidget ??
                             Center(
                               child: SizedBox.square(
@@ -454,6 +453,12 @@ class MagicImage extends StatelessWidget {
                             : (color == null || blendMode == null)
                                 ? null
                                 : ColorFilter.mode(color!, blendMode!),
+                        errorBuilder: (context, error, stackTrace) =>
+                            errorWidget ??
+                            Icon(
+                              Icons.image_not_supported_outlined,
+                              color: color ?? Colors.red,
+                            ),
                       )
                     : CachedNetworkImage(
                         httpHeaders: headers,
