@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'magic_cached_image.dart';
+import 'magic_svg_image.dart';
 import 'string_extension.dart';
 
 /// A widget that displays an image from a given path, with support for both
@@ -17,7 +19,7 @@ class MagicImage extends StatelessWidget {
   /// The [fit], [height], [width], [squareDimension], [placeholderWidget],
   /// [errorWidget], [svgPlaceHolder], [repeat], [color], [blendMode],
   /// [colorFilter], [boxDecoration], [clipBehavior], and [defaultPlaceHolderSize] parameters are optional.
-  const MagicImage(
+  MagicImage(
     this.path, {
     super.key,
     this.fit,
@@ -102,7 +104,19 @@ class MagicImage extends StatelessWidget {
     this.forceSvg = false,
     this.semanticsLabel,
     this.alignment,
-  });
+    this.errorWidgetBuilder,
+    this.placeHolderBuilder,
+  }) {
+    assert(
+      placeholderWidget == null || placeHolderBuilder == null,
+      'You can ony provide either placeholderWidget or placeHolderBuilder',
+    );
+
+    assert(
+      errorWidget == null || errorWidgetBuilder == null,
+      'You can ony provide either placeholderWidget or placeHolderBuilder',
+    );
+  }
 
   /// The path of the image to display.
   ///
@@ -167,6 +181,7 @@ class MagicImage extends StatelessWidget {
   /// Callback for when an error occurs while loading the image.
   ///
   /// It takes two parameters: the error object and the stack trace.
+  @Deprecated("This Function Is longer called, use builder instead")
   final Function(Object? error, StackTrace? stacktrace)? onError;
 
   /// A callback that is triggered when the image is tapped.
@@ -367,6 +382,12 @@ class MagicImage extends StatelessWidget {
   /// AlignmentGeometry to set Alignment
   final Alignment? alignment;
 
+  /// builds error widget
+  final ImageErrorWidgetBuilder? errorWidgetBuilder;
+
+  /// Place Holder Builder
+  final Widget Function(BuildContext context)? placeHolderBuilder;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -436,7 +457,9 @@ class MagicImage extends StatelessWidget {
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final double minSize =
-              min(constraints.maxHeight, constraints.maxWidth);
+              (constraints.hasBoundedWidth && constraints.hasBoundedHeight)
+                  ? min(constraints.maxHeight, constraints.maxWidth)
+                  : 40.0;
           final double loaderSize =
               defaultPlaceHolderSize ?? (minSize > 40 ? 40 : minSize / 2);
           return Container(
@@ -444,98 +467,113 @@ class MagicImage extends StatelessWidget {
             decoration: boxDecoration,
             width: squareDimension ?? width,
             height: squareDimension ?? height,
-            child: path.isURL
+            child: path.isLocalFile
                 ? (path.isSVG || forceSvg)
-                    ? SvgPicture(
-                        alignment: alignment ?? Alignment.center,
+                    ? MagicSvgImage(
+                        bytesLoader: SvgFileLoader(File(path)),
+                        alignment: alignment,
                         semanticsLabel: semanticsLabel,
-                        SvgNetworkLoader(Uri.parse(path).toString(),
-                            headers: headers),
-                        width: squareDimension ?? width,
-                        height: squareDimension ?? height,
-                        placeholderBuilder: (context) =>
-                            placeholderWidget ??
-                            Center(
-                              child: SizedBox.square(
-                                dimension: loaderSize,
-                                child: const CircularProgressIndicator(),
-                              ),
-                            ),
-                        fit: fit ?? BoxFit.contain,
-                        colorFilter: colorFilter != null
-                            ? colorFilter
-                            : (color == null || blendMode == null)
-                                ? null
-                                : ColorFilter.mode(color!, blendMode!),
-                        errorBuilder: (context, error, stackTrace) =>
-                            errorWidget ?? SizedBox.shrink(),
-                      )
-                    : Semantics(
-                        label: semanticsLabel,
-                        child: CachedNetworkImage(
-                          alignment: alignment ?? Alignment.center,
-                          httpHeaders: headers,
-                          repeat: repeat,
-                          width: squareDimension ?? width,
-                          height: squareDimension ?? height,
-                          imageUrl: Uri.parse(path).toString(),
-                          placeholder: (BuildContext context, String url) =>
-                              placeholderWidget ??
-                              Center(
-                                child: SizedBox.square(
-                                  dimension: loaderSize,
-                                  child: const CircularProgressIndicator(),
-                                ),
-                              ),
-                          errorWidget:
-                              (BuildContext context, String url, Object error) {
-                            onError?.call(error, null);
-                            return errorWidget ?? const SizedBox.shrink();
-                          },
-                          fit: fit,
-                          color: color,
-                          colorBlendMode: blendMode,
-                        ),
-                      )
-                : (path.isSVG || forceSvg)
-                    ? SvgPicture(
-                        SvgAssetLoader(path),
-                        alignment: alignment ?? Alignment.center,
-                        semanticsLabel: semanticsLabel,
-                        width: squareDimension ?? width,
-                        height: squareDimension ?? height,
-                        fit: fit ?? BoxFit.contain,
-                        colorFilter: colorFilter != null
-                            ? colorFilter
-                            : (color == null || blendMode == null)
-                                ? null
-                                : ColorFilter.mode(color!, blendMode!),
-                        placeholderBuilder: (context) =>
-                            placeholderWidget ??
-                            Center(
-                              child: SizedBox.square(
-                                dimension: loaderSize,
-                                child: const CircularProgressIndicator(),
-                              ),
-                            ),
-                        errorBuilder: (context, error, stackTrace) =>
-                            errorWidget ?? SizedBox.shrink(),
+                        squareDimension: squareDimension,
+                        width: width,
+                        height: height,
+                        placeholderWidget: placeholderWidget,
+                        loaderSize: loaderSize,
+                        fit: fit,
+                        colorFilter: colorFilter,
+                        color: color,
+                        blendMode: blendMode,
+                        errorWidget: errorWidget,
+                        errorWidgetBuilder: errorWidgetBuilder,
+                        placeHolderBuilder: placeHolderBuilder,
                       )
                     : Image(
+                        image: FileImage(File(path)),
                         alignment: alignment ?? Alignment.center,
                         semanticLabel: semanticsLabel,
-                        image: AssetImage(path),
                         fit: fit,
                         width: squareDimension ?? width,
                         height: squareDimension ?? height,
                         repeat: repeat,
                         color: color,
                         colorBlendMode: blendMode,
-                        errorBuilder: (context, error, stackTrace) {
-                          onError?.call(error, stackTrace);
-                          return errorWidget ?? const SizedBox.shrink();
-                        },
-                      ),
+                        errorBuilder: errorWidgetBuilder ??
+                            (context, error, stackTrace) {
+                              return errorWidget ?? const SizedBox.shrink();
+                            },
+                      )
+                : path.isURL
+                    ? (path.isSVG || forceSvg)
+                        ? MagicSvgImage(
+                            bytesLoader: SvgNetworkLoader(
+                              Uri.parse(path).toString(),
+                              headers: headers,
+                            ),
+                            alignment: alignment,
+                            semanticsLabel: semanticsLabel,
+                            squareDimension: squareDimension,
+                            width: width,
+                            height: height,
+                            placeholderWidget: placeholderWidget,
+                            loaderSize: loaderSize,
+                            fit: fit,
+                            colorFilter: colorFilter,
+                            color: color,
+                            blendMode: blendMode,
+                            errorWidget: errorWidget,
+                            errorWidgetBuilder: errorWidgetBuilder,
+                            placeHolderBuilder: placeHolderBuilder,
+                          )
+                        : MagicCachedImage(
+                            semanticsLabel: semanticsLabel,
+                            alignment: alignment,
+                            headers: headers,
+                            repeat: repeat,
+                            squareDimension: squareDimension,
+                            width: width,
+                            height: height,
+                            path: path,
+                            placeholderWidget: placeholderWidget,
+                            loaderSize: loaderSize,
+                            errorWidget: errorWidget,
+                            fit: fit,
+                            errorWidgetBuilder: errorWidgetBuilder,
+                            placeHolderBuilder: placeHolderBuilder,
+                            color: color,
+                            blendMode: blendMode,
+                          )
+                    : (path.isSVG || forceSvg)
+                        ? MagicSvgImage(
+                            bytesLoader: SvgAssetLoader(path),
+                            alignment: alignment,
+                            semanticsLabel: semanticsLabel,
+                            squareDimension: squareDimension,
+                            width: width,
+                            height: height,
+                            placeholderWidget: placeholderWidget,
+                            loaderSize: loaderSize,
+                            fit: fit,
+                            colorFilter: colorFilter,
+                            color: color,
+                            blendMode: blendMode,
+                            errorWidget: errorWidget,
+                            errorWidgetBuilder: errorWidgetBuilder,
+                            placeHolderBuilder: placeHolderBuilder,
+                          )
+                        : Image(
+                            alignment: alignment ?? Alignment.center,
+                            semanticLabel: semanticsLabel,
+                            image: AssetImage(path),
+                            fit: fit,
+                            width: squareDimension ?? width,
+                            height: squareDimension ?? height,
+                            repeat: repeat,
+                            color: color,
+                            colorBlendMode: blendMode,
+                            errorBuilder: errorWidgetBuilder ??
+                                (context, error, stackTrace) {
+                                  return errorWidget ?? const SizedBox.shrink();
+                                },
+                          ),
           );
         },
       ),

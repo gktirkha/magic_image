@@ -1,6 +1,11 @@
+import 'dart:io' show File;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 extension StringExtension on String {
   bool get isURL => StringUtil.isURL(Uri.parse(this).toString());
   bool get isSVG => endsWith('.svg');
+  bool get isLocalFile => kIsWeb ? false : File(this).existsSync();
 }
 
 class StringUtil {

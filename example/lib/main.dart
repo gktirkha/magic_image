@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
                 squareDimension: 200,
                 fit: BoxFit.fill,
               ),
-              const MagicImage(
+              MagicImage(
                 "https://photographylife.com/wp-content/uploads/2023/05/Nikon-Z8-Official-Samples-00001.jpg",
                 squareDimension: 200,
                 fit: BoxFit.fill,
