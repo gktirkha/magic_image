@@ -454,11 +454,7 @@ class MagicImage extends StatelessWidget {
                                 ? null
                                 : ColorFilter.mode(color!, blendMode!),
                         errorBuilder: (context, error, stackTrace) =>
-                            errorWidget ??
-                            Icon(
-                              Icons.image_not_supported_outlined,
-                              color: color ?? Colors.red,
-                            ),
+                            errorWidget ?? SizedBox.shrink(),
                       )
                     : CachedNetworkImage(
                         httpHeaders: headers,
