@@ -1,26 +1,20 @@
 
-## ✗ Follow Dart file conventions (20 / 30)
+## ✓ Follow Dart file conventions (30 / 30)
 ### [*] 10/10 points: Provide a valid `pubspec.yaml`
 
 ### [*] 5/5 points: Provide a valid `README.md`
 
 ### [*] 5/5 points: Provide a valid `CHANGELOG.md`
 
-### [x] 0/10 points: Use an OSI-approved license
+### [*] 10/10 points: Use an OSI-approved license
 
-<details>
-<summary>
-No license was recognized.
-</summary>
-
-Consider using an [OSI-approved license](https://opensource.org/licenses) in the `LICENSE` file to make it more accessible to the community.
-</details>
+Detected license: `MIT`.
 
 
 ## ✓ Provide documentation (20 / 20)
 ### [*] 10/10 points: 20% or more of the public API has dartdoc comments
 
-85 out of 86 API elements (98.8 %) have documentation comments.
+90 out of 91 API elements (98.9 %) have documentation comments.
 
 Some symbols that are missing documentation: `magic_image.MagicImageExtension.toMagicImage`.
 
@@ -52,7 +46,9 @@ Package does not support platform `Windows`.
 
 Because:
 * `package:magic_image/magic_image.dart` that imports:
-* `package:magic_image/src/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_image_io.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_cached_image.dart` that imports:
 * `package:cached_network_image/cached_network_image.dart` that imports:
 * `package:cached_network_image/src/image_provider/cached_network_image_provider.dart` that imports:
 * `package:flutter_cache_manager/flutter_cache_manager.dart` that imports:
@@ -68,7 +64,9 @@ Package does not support platform `Linux`.
 
 Because:
 * `package:magic_image/magic_image.dart` that imports:
-* `package:magic_image/src/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_image_io.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_io/magic_cached_image.dart` that imports:
 * `package:cached_network_image/cached_network_image.dart` that imports:
 * `package:cached_network_image/src/image_provider/cached_network_image_provider.dart` that imports:
 * `package:flutter_cache_manager/flutter_cache_manager.dart` that imports:
@@ -84,7 +82,10 @@ Package does not support platform `Web`.
 
 Because:
 * `package:magic_image/magic_image.dart` that imports:
-* `package:magic_image/src/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image_extension.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image_web.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_cached_image.dart` that imports:
 * `package:cached_network_image/cached_network_image.dart` that imports:
 * `package:cached_network_image/src/image_provider/cached_network_image_provider.dart` that imports:
 * `package:flutter_cache_manager/flutter_cache_manager.dart` that imports:
@@ -102,7 +103,10 @@ Package not compatible with runtime wasm
 
 Because:
 * `package:magic_image/magic_image.dart` that imports:
-* `package:magic_image/src/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image_extension.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image_web.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_image.dart` that imports:
+* `package:magic_image/src/magic_image_web/magic_cached_image.dart` that imports:
 * `package:cached_network_image/cached_network_image.dart` that imports:
 * `package:cached_network_image/src/image_provider/cached_network_image_provider.dart` that imports:
 * `package:flutter_cache_manager/flutter_cache_manager.dart` that imports:
@@ -246,4 +250,4 @@ To reproduce run `dart pub outdated --no-dev-dependencies --up-to-date --no-depe
 `pub downgrade` does not expose any static analysis error.
 
 
-Points: 150/160.
+Points: 160/160.

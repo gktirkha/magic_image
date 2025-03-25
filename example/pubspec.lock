@@ -198,12 +198,10 @@ packages:
   magic_image:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "315a9c0ac44feb63580aaaa9978aba907569d140"
-      url: ".."
-    source: git
-    version: "0.0.3"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.4"
   matcher:
     dependency: transitive
     description:

@@ -3,7 +3,5 @@
 
 library magic_image;
 
-export './src/magic_image_io/magic_image_extension.dart'
-    if (dart.library.js_interop) './src/magic_image_web/magic_image_web.dart';
-export './src/magic_image_io/magic_image_io.dart'
-    if (dart.library.js_interop) './src/magic_image_web/magic_image_extension.dart';
+export 'magic_image.dart';
+export 'magic_image_extension.dart';

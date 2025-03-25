@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../magic_image.dart';
+import 'magic_image_web.dart';
 
 /// Extension on [ String ] to convert a string into a [ MagicImage ] widget.
 ///

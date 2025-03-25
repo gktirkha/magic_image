@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   magic_image:
-    git: ../
+    path: ../
 
 dev_dependencies:
   flutter_test:
