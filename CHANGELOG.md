@@ -13,3 +13,7 @@
 ## 0.0.4
 
 * added key in extension
+
+## 0.1.4
+
+* added web support and License update
