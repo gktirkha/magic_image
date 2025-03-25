@@ -14,6 +14,6 @@
 
 * added key in extension
 
-## 0.1.4
+## 0.1.0
 
 * added web support and License update
