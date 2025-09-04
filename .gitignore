@@ -30,3 +30,6 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 .vscode/
+
+# FVM Version Cache
+.fvm/

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class MagicCachedImage extends StatelessWidget {
   const MagicCachedImage({
     super.key,
-    required this.semanticsLabel,
     required this.alignment,
     required this.headers,
     required this.repeat,
@@ -12,9 +11,6 @@ class MagicCachedImage extends StatelessWidget {
     required this.width,
     required this.height,
     required this.path,
-    required this.placeholderWidget,
-    required this.loaderSize,
-    required this.errorWidget,
     required this.fit,
     required this.color,
     required this.blendMode,
@@ -22,7 +18,6 @@ class MagicCachedImage extends StatelessWidget {
     required this.errorWidgetBuilder,
   });
 
-  final String? semanticsLabel;
   final Alignment? alignment;
   final Map<String, String>? headers;
   final ImageRepeat repeat;
@@ -30,9 +25,7 @@ class MagicCachedImage extends StatelessWidget {
   final double? width;
   final double? height;
   final String path;
-  final Widget? placeholderWidget;
-  final double loaderSize;
-  final Widget? errorWidget;
+
   final BoxFit? fit;
   final Color? color;
   final BlendMode? blendMode;
@@ -41,38 +34,26 @@ class MagicCachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: semanticsLabel,
-      child: CachedNetworkImage(
-        alignment: alignment ?? Alignment.center,
-        httpHeaders: headers,
-        repeat: repeat,
-        width: squareDimension ?? width,
-        height: squareDimension ?? height,
-        imageUrl: Uri.parse(path).toString(),
-        placeholder: (BuildContext context, String url) {
-          if (placeHolderBuilder != null) {
-            return placeHolderBuilder!.call(context);
-          }
-          return placeholderWidget ??
-              Center(
-                child: SizedBox.square(
-                  dimension: loaderSize,
-                  child: const CircularProgressIndicator(),
-                ),
-              );
-        },
-        errorWidget: (BuildContext context, String url, Object error) {
-          if (errorWidgetBuilder != null) {
-            return errorWidgetBuilder!.call(context, error, null);
-          } else {
-            return errorWidget ?? const SizedBox.shrink();
-          }
-        },
-        fit: fit,
-        color: color,
-        colorBlendMode: blendMode,
-      ),
+    return CachedNetworkImage(
+      alignment: alignment ?? Alignment.center,
+      httpHeaders: headers,
+      repeat: repeat,
+      width: squareDimension ?? width,
+      height: squareDimension ?? height,
+      imageUrl: Uri.parse(path).toString(),
+      placeholder: placeHolderBuilder == null
+          ? null
+          : (context, url) {
+              return placeHolderBuilder!.call(context);
+            },
+      fit: fit,
+      color: color,
+      colorBlendMode: blendMode,
+      errorWidget: errorWidgetBuilder == null
+          ? null
+          : (BuildContext context, String url, Object error) {
+              return errorWidgetBuilder!.call(context, error, null);
+            },
     );
   }
 }

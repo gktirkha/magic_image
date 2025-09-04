@@ -74,10 +74,6 @@ class Home extends StatelessWidget {
                         fit: BoxFit.fill,
                         textEditingController.text,
                         squareDimension: 300,
-                        errorWidget: Center(child: Text("Error Occurred")),
-                        placeholderWidget: Center(
-                          child: CircularProgressIndicator(),
-                        ),
                       ),
                     ),
 
