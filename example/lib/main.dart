@@ -74,6 +74,9 @@ class Home extends StatelessWidget {
                         fit: BoxFit.fill,
                         textEditingController.text,
                         squareDimension: 300,
+                        errorWidgetBuilder:
+                            (context, error, stackTrace) => Text("Error"),
+                        placeHolderBuilder: (context) => Text("Placeholder"),
                       ),
                     ),
 

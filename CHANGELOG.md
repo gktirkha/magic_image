@@ -21,3 +21,7 @@
 ## 1.0.0
 
 * removed gesture detector in favour of raw gesture and redundant builders
+
+## 1.0.1
+
+* Added Example
