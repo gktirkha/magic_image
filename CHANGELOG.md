@@ -17,3 +17,7 @@
 ## 0.1.0
 
 * added web support and License update
+
+## 1.0.0
+
+* removed gesture detector in favour of raw gesture and redundant builders
