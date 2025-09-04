@@ -157,75 +157,75 @@ class MagicImage extends StatelessWidget {
       child: RawGestureDetector(
         gestures: gestures ?? {},
         behavior: behavior,
-        child: _buildImage(),
+        child: Container(
+          clipBehavior: clipBehavior,
+          decoration: boxDecoration,
+          width: squareDimension ?? width,
+          height: squareDimension ?? height,
+          child: _buildImage(),
+        ),
       ),
     );
   }
 
   /// Builds the appropriate image widget depending on [path] and [forceSvg].
-  Container _buildImage() {
-    return Container(
-      clipBehavior: clipBehavior,
-      decoration: boxDecoration,
-      width: squareDimension ?? width,
-      height: squareDimension ?? height,
-      child: path.isURL
-          ? (path.isSVG || forceSvg)
-              ? MagicSvgImage(
-                  bytesLoader: SvgNetworkLoader(
-                    Uri.parse(path).toString(),
-                    headers: headers,
-                  ),
-                  alignment: alignment,
-                  squareDimension: squareDimension,
-                  width: width,
-                  height: height,
-                  fit: fit,
-                  colorFilter: colorFilter,
-                  color: color,
-                  blendMode: blendMode,
-                  errorWidgetBuilder: errorWidgetBuilder,
-                  placeHolderBuilder: placeHolderBuilder,
-                )
-              : MagicCachedImage(
-                  alignment: alignment,
+  Widget _buildImage() {
+    return path.isURL
+        ? (path.isSVG || forceSvg)
+            ? MagicSvgImage(
+                bytesLoader: SvgNetworkLoader(
+                  Uri.parse(path).toString(),
                   headers: headers,
-                  repeat: repeat,
-                  squareDimension: squareDimension,
-                  width: width,
-                  height: height,
-                  path: path,
-                  fit: fit,
-                  errorWidgetBuilder: errorWidgetBuilder,
-                  placeHolderBuilder: placeHolderBuilder,
-                  color: color,
-                  blendMode: blendMode,
-                )
-          : (path.isSVG || forceSvg)
-              ? MagicSvgImage(
-                  bytesLoader: SvgAssetLoader(path),
-                  alignment: alignment,
-                  squareDimension: squareDimension,
-                  width: width,
-                  height: height,
-                  fit: fit,
-                  colorFilter: colorFilter,
-                  color: color,
-                  blendMode: blendMode,
-                  errorWidgetBuilder: errorWidgetBuilder,
-                  placeHolderBuilder: placeHolderBuilder,
-                )
-              : Image(
-                  alignment: alignment ?? Alignment.center,
-                  image: AssetImage(path),
-                  fit: fit,
-                  width: squareDimension ?? width,
-                  height: squareDimension ?? height,
-                  repeat: repeat,
-                  color: color,
-                  colorBlendMode: blendMode,
-                  errorBuilder: errorWidgetBuilder,
                 ),
-    );
+                alignment: alignment,
+                squareDimension: squareDimension,
+                width: width,
+                height: height,
+                fit: fit,
+                colorFilter: colorFilter,
+                color: color,
+                blendMode: blendMode,
+                errorWidgetBuilder: errorWidgetBuilder,
+                placeHolderBuilder: placeHolderBuilder,
+              )
+            : MagicCachedImage(
+                alignment: alignment,
+                headers: headers,
+                repeat: repeat,
+                squareDimension: squareDimension,
+                width: width,
+                height: height,
+                path: path,
+                fit: fit,
+                errorWidgetBuilder: errorWidgetBuilder,
+                placeHolderBuilder: placeHolderBuilder,
+                color: color,
+                blendMode: blendMode,
+              )
+        : (path.isSVG || forceSvg)
+            ? MagicSvgImage(
+                bytesLoader: SvgAssetLoader(path),
+                alignment: alignment,
+                squareDimension: squareDimension,
+                width: width,
+                height: height,
+                fit: fit,
+                colorFilter: colorFilter,
+                color: color,
+                blendMode: blendMode,
+                errorWidgetBuilder: errorWidgetBuilder,
+                placeHolderBuilder: placeHolderBuilder,
+              )
+            : Image(
+                alignment: alignment ?? Alignment.center,
+                image: AssetImage(path),
+                fit: fit,
+                width: squareDimension ?? width,
+                height: squareDimension ?? height,
+                repeat: repeat,
+                color: color,
+                colorBlendMode: blendMode,
+                errorBuilder: errorWidgetBuilder,
+              );
   }
 }
