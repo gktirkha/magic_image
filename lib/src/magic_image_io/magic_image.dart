@@ -8,9 +8,29 @@ import 'magic_cached_image.dart';
 import 'magic_svg_image.dart';
 import 'string_extension.dart';
 
-/// A widget that displays an image from a given path (asset, network, or file),
-/// with optional SVG support, placeholders, error widgets, and gestures.
+/// A versatile image widget that automatically handles
+/// asset, network, and local file images with support for
+/// both raster and SVG formats.
+///
+/// `MagicImage` supports:
+/// - Local assets
+/// - Network images (with caching)
+/// - Local file paths
+/// - SVG rendering (auto-detected or forced)
+/// - Gestures via [RawGestureDetector]
+/// - Custom placeholders and error widgets
+///
+/// This widget unifies Flutter’s `Image`, `SvgPicture`,
+/// and caching logic into a single, convenient widget.
 class MagicImage extends StatelessWidget {
+  /// Creates a [MagicImage].
+  ///
+  /// The [path] must be either:
+  /// - a network URL (`http://`, `https://`)
+  /// - a local file path
+  /// - an asset path
+  ///
+  /// SVGs are auto-detected by extension, or can be forced with [forceSvg].
   const MagicImage(
     this.path, {
     super.key,
@@ -28,7 +48,6 @@ class MagicImage extends StatelessWidget {
     this.headers,
     this.gestures,
     this.behavior,
-    this.dragStartBehavior = DragStartBehavior.start,
     this.excludeFromSemantics = false,
     this.supportedDevices,
     this.trackpadScrollCausesScale = false,
@@ -38,31 +57,79 @@ class MagicImage extends StatelessWidget {
     this.errorWidgetBuilder,
     this.placeHolderBuilder,
     this.semanticsLabel,
-    this.svgPlaceHolder,
   });
 
+  /// Path to the image (asset, file, or URL).
   final String path;
 
+  /// How to inscribe the image into the space allocated during layout.
   final BoxFit? fit;
+
+  /// Explicit height of the image.
   final double? height;
+
+  /// Explicit width of the image.
   final double? width;
+
+  /// A shorthand to set both [width] and [height] to the same value.
   final double? squareDimension;
 
-  final Widget? svgPlaceHolder;
-
+  /// How to paint any portions of the image that are not covered by the source.
   final ImageRepeat repeat;
+
+  /// If non-null, this color is blended with the image.
   final Color? color;
+
+  /// The blend mode applied to [color].
   final BlendMode? blendMode;
+
+  /// A custom [ColorFilter] to apply to the image.
   final ColorFilter? colorFilter;
+
+  /// An optional decoration for the container around the image.
   final BoxDecoration? boxDecoration;
 
+  /// Default placeholder size, used when no custom placeholder is given.
   final double? defaultPlaceHolderSize;
+
+  /// How to clip the widget’s content.
   final Clip clipBehavior;
+
+  /// Optional HTTP headers for network image requests.
   final Map<String, String>? headers;
+
+  /// A semantic label for accessibility.
   final String? semanticsLabel;
+
+  /// Whether to exclude semantics for this widget.
   final bool excludeFromSemantics;
 
-  /// Use this to define gestures instead of dozens of callbacks.
+  /// The behavior of hit testing for gestures.
+  final HitTestBehavior? behavior;
+
+  /// Devices allowed to trigger gesture recognizers.
+  final Set<PointerDeviceKind>? supportedDevices;
+
+  /// Whether to enable pinch-to-zoom with trackpad scroll gestures.
+  final bool trackpadScrollCausesScale;
+
+  /// Factor applied when scaling with trackpad scroll.
+  final Offset trackpadScrollToScaleFactor;
+
+  /// Forces the widget to render the image as an SVG,
+  /// regardless of file extension.
+  final bool forceSvg;
+
+  /// Alignment of the image within its bounds.
+  final Alignment? alignment;
+
+  /// Custom builder for error widgets when image fails to load.
+  final ImageErrorWidgetBuilder? errorWidgetBuilder;
+
+  /// Custom builder for placeholder widgets while loading.
+  final Widget Function(BuildContext context)? placeHolderBuilder;
+
+  /// Use this to define gestures instead of individual callbacks.
   ///
   /// Example:
   /// ```dart
@@ -74,20 +141,6 @@ class MagicImage extends StatelessWidget {
   /// }
   /// ```
   final Map<Type, GestureRecognizerFactory>? gestures;
-
-  final HitTestBehavior? behavior;
-  final DragStartBehavior dragStartBehavior;
-
-  final Set<PointerDeviceKind>? supportedDevices;
-  final bool trackpadScrollCausesScale;
-  final Offset trackpadScrollToScaleFactor;
-
-  final bool forceSvg;
-
-  final Alignment? alignment;
-
-  final ImageErrorWidgetBuilder? errorWidgetBuilder;
-  final Widget Function(BuildContext context)? placeHolderBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +161,10 @@ class MagicImage extends StatelessWidget {
     );
   }
 
+  /// Builds the appropriate image widget based on [path].
   Widget _buildImage() {
     if (path.isLocalFile) {
+      // Local file image
       return (path.isSVG || forceSvg)
           ? MagicSvgImage(
               bytesLoader: SvgFileLoader(File(path)),
@@ -136,6 +191,7 @@ class MagicImage extends StatelessWidget {
               errorBuilder: errorWidgetBuilder,
             );
     } else if (path.isURL) {
+      // Network image
       return (path.isSVG || forceSvg)
           ? MagicSvgImage(
               bytesLoader: SvgNetworkLoader(path, headers: headers),
@@ -165,6 +221,7 @@ class MagicImage extends StatelessWidget {
               blendMode: blendMode,
             );
     } else {
+      // Asset image
       return (path.isSVG || forceSvg)
           ? MagicSvgImage(
               bytesLoader: SvgAssetLoader(path),
